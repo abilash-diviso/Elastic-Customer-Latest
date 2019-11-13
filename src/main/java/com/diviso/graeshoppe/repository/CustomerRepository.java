@@ -11,7 +11,7 @@ import java.util.Optional;
 @SuppressWarnings("unused")
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
-	Customer findByReference(String reference);
+	/* Customer findByReference(String reference); */
 	
 	Optional<Customer> findByContact_MobileNumber(Long mobileNumber);
 }

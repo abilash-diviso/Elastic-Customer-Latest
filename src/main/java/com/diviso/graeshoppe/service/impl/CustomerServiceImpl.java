@@ -326,11 +326,10 @@ public class CustomerServiceImpl implements CustomerService {
 		}
 	}
 
-	@Override
-	public Customer findByReference(String reference) {
-		return customerRepository.findByReference(reference);
-	}
-
+	/*
+	 * @Override public Customer findByReference(String reference) { return
+	 * customerRepository.findByReference(reference); }
+	 */
 	@Override
 	public Optional<CustomerDTO> findByMobileNumber(Long mobileNumber) {
 

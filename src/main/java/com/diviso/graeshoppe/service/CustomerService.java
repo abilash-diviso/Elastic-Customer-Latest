@@ -80,7 +80,7 @@ public interface CustomerService {
 
 	OTPChallenge verifyOTP(Long numbers, String code);
 
-	Customer findByReference(String reference);
+	/* Customer findByReference(String reference); */
 
 	Optional<CustomerDTO> findByMobileNumber(Long mobileNumber);
 
