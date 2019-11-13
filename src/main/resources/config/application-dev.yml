@@ -24,7 +24,8 @@ eureka:
         prefer-ip-address: true
     client:
         service-url:
-            defaultZone: http://admin:${jhipster.registry.password}@localhost:8761/eureka/
+            defaultZone: https://admin:${jhipster.registry.password}@lxi-registry-server.herokuapp.com/eureka/
+        enabled: false
 
 spring:
     profiles:
@@ -41,20 +42,35 @@ spring:
     jackson:
         serialization:
             indent-output: true
+            
     cloud:
         stream:
             kafka:
                 binder:
-                    brokers: localhost
-                    zk-nodes: localhost
+                    brokers: dev.servers.divisosofttech.com
+                    zk-nodes: dev.servers.divisosofttech.com
+                    configuration:
+                       key.serializer: org.apache.kafka.common.serialization.ByteArraySerializer
+                       value.serializer: com.diviso.graeshoppe.config.SerdeConfig
             bindings:
                 output:
                     destination: topic-jhipster
+                customer:
+                    destination: customer
+                    contentType: application/*+avro
+                    producer:
+                       useNativeEncoding: true
+            schemaRegistryClient:
+              endpoint: http://dev.servers.divisosofttech.com:8081
+            schema:
+              avro:
+                schema-locations: classpath:avro/customer.avsc
+
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
         url: jdbc:mysql://localhost:3306/customer?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC
         username: root
-        password:
+        password: root
         hikari:
             poolName: Hikari
             auto-commit: false
@@ -77,13 +93,26 @@ spring:
             hibernate.cache.hazelcast.instance_name: customer
             hibernate.cache.use_minimal_puts: true
             hibernate.cache.hazelcast.use_lite_member: true
+
     liquibase:
         contexts: dev
     mail:
-        host: localhost
-        port: 25
-        username:
-        password:
+        host: smtp.gmail.com
+        port: 587
+        username: graeshoppe.diviso@gmail.com
+        password: dpfd gsve sajm bkpa
+        properties:
+            mail:
+                smtp:
+                    ssl:
+                        trust: smtp.gmail.com
+                    starttls:
+                        enable: true
+                        required: true
+                    auth: true
+                    connectiontimeout: 5000
+                    timeout: 5000
+                    writetimeout: 5000
     messages:
         cache-duration: PT1S # 1 second, see the ISO 8601 standard
     thymeleaf:
@@ -120,13 +149,13 @@ jhipster:
                 url: http://localhost:8180/mancenter
     # CORS is disabled by default on microservices, as you should access them through a gateway.
     # If you want to enable it, please uncomment the configuration below.
-    # cors:
-        # allowed-origins: "*"
-        # allowed-methods: "*"
-        # allowed-headers: "*"
-        # exposed-headers: "Authorization,Link,X-Total-Count"
-        # allow-credentials: true
-        # max-age: 1800
+    #cors:
+        #allowed-origins: "*"
+        #allowed-methods: "*"
+        #allowed-headers: "*"
+        #exposed-headers: "Authorization,Link,X-Total-Count"
+        #allow-credentials: true
+        #max-age: 1800
     mail: # specific JHipster mail property, for standard properties see MailProperties
         from: customer@localhost
         base-url: http://127.0.0.1:8088

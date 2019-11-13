@@ -1,0 +1,41 @@
+
+entity Customer {
+	 idpCode String required,//reference
+	 name String,	 
+	 idpSub String,//searchkey
+	 imageLink String
+	}
+
+entity Contact {
+	mobileNumber Long required,
+	phoneCode Long,
+    email String	
+}
+
+entity FavouriteProduct {
+	productId Long required
+}
+
+entity FavouriteStore {
+	storeId Long required
+
+}
+
+entity UniqueCustomerID{
+}
+
+relationship OneToMany {
+	
+	Customer{favouritestore} to FavouriteStore,
+	Customer{favouriteproduct} to FavouriteProduct
+}
+
+relationship OneToOne {
+	Customer{contact} to Contact
+}
+
+paginate * with pagination
+
+dto * with mapstruct
+
+service all with serviceImpl
