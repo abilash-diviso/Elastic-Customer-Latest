@@ -3,7 +3,7 @@
  	{
 	"namespace":"com.diviso.graeshoppe.avro",
 	"type":"record",
-	"name":"Contact",
+	"name":"ContactInfo",
 	"fields":[
 		{"name":"id",
 		"type":["null","long"]},
@@ -62,7 +62,7 @@
 	{
 	"namespace":"com.diviso.graeshoppe.avro",
 	"type":"record",
-	"name":"Customer",
+	"name":"CustomerInfo",
 	"fields":[
 		{"name":"id",
 		"type":["null","long"]},
@@ -87,20 +87,10 @@
 		"type":["null","string"],
 		"default": "null"},
 		
-		 {"name":"contact",
-		 "type":["null","com.diviso.graeshoppe.avro.Contact"], 
-		 "default": "null"},
-		
+		 
 		{"name":"image",
 		"type":["null","bytes"],
-		"default":"\u00FF"},
-		
-		{"name":"favouriteProducts","type":{"type":"array","items":"com.diviso.graeshoppe.avro.FavouriteProduct"}},
-		{"name":"favouriteStores","type":{"type":"array","items":"com.diviso.graeshoppe.avro.FavouriteStore"}}
-
-		
-		
-		
+		"default":"\u00FF"}
 		
 		]
 		

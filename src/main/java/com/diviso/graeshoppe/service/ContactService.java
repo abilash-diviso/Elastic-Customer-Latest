@@ -1,5 +1,6 @@
 package com.diviso.graeshoppe.service;
 
+import com.diviso.graeshoppe.domain.Contact;
 import com.diviso.graeshoppe.service.dto.ContactDTO;
 
 import org.springframework.data.domain.Page;
@@ -43,4 +44,6 @@ public interface ContactService {
      * @param id the id of the entity
      */
     void delete(Long id);
+
+	boolean createPublishMesssage(Contact contact, String status);
 }

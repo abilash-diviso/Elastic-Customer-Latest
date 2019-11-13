@@ -1,6 +1,7 @@
 package com.diviso.graeshoppe.service.impl;
 
 import com.diviso.graeshoppe.service.CustomerService;
+import com.diviso.graeshoppe.avro.CustomerInfo.Builder;
 import com.diviso.graeshoppe.client.SMS.SMSResourceApiIN;
 import com.diviso.graeshoppe.client.SMS.SMSResourceApiUK;
 import com.diviso.graeshoppe.config.MessageBinderConfiguration;
@@ -124,7 +125,7 @@ public class CustomerServiceImpl implements CustomerService {
 		
         log.debug("------------------------------------------publish method"+status);
 
-		com.diviso.graeshoppe.avro.Customer message =customerAvroMapper.toAvro(customer);
+		com.diviso.graeshoppe.avro.CustomerInfo message =customerAvroMapper.toAvro(customer);
 		message .setStatus(status);
 
 		System.out.println("avro mapped#############################################"+message);
@@ -146,7 +147,6 @@ public class CustomerServiceImpl implements CustomerService {
 		Customer customer = customerMapper.toEntity(customerDTO);
 		customer = customerRepository.save(customer);
 		CustomerDTO result = customerMapper.toDto(customer);
-		//customerSearchRepository.save(customer);
 		String status="update";
         boolean publishstatus=updatePublishMesssage(customer,status);
         log.debug("------------------------------------------published"+publishstatus);
@@ -158,11 +158,11 @@ public class CustomerServiceImpl implements CustomerService {
 	public boolean updatePublishMesssage(Customer customer, String status) {
         log.debug("------------------------------------------updatepublish method");
 
-		Builder customerAvro = com.diviso.graeshoppe.avro.Customer.newBuilder()
+		Builder customerAvro = com.diviso.graeshoppe.avro.CustomerInfo.newBuilder()
 				.setId(customer.getId())
 				.setName(customer.getName())
 				.setStatus(status);
-		com.diviso.graeshoppe.avro.Customer message =customerAvro.build();
+		com.diviso.graeshoppe.avro.CustomerInfo message =customerAvro.build();
 		return messageChannel.customerOut().send(MessageBuilder.withPayload(message).build());
 	}
 
@@ -217,10 +217,10 @@ public class CustomerServiceImpl implements CustomerService {
 	public boolean deleteMesssage(Customer customer, String status) {
         log.debug("------------------------------------------updatepublish method");
 
-		Builder customerAvro = com.diviso.graeshoppe.avro.Customer.newBuilder()
+		Builder customerAvro = com.diviso.graeshoppe.avro.CustomerInfo.newBuilder()
 
 				.setStatus(status);
-		com.diviso.graeshoppe.avro.Customer message =customerAvro.build();
+		com.diviso.graeshoppe.avro.CustomerInfo message =customerAvro.build();
 		return messageChannel.customerOut().send(MessageBuilder.withPayload(message).build());
 	}
 	

@@ -1,15 +1,20 @@
 package com.diviso.graeshoppe.service.impl;
 
 import com.diviso.graeshoppe.service.ContactService;
+import com.diviso.graeshoppe.config.MessageBinderConfiguration;
 import com.diviso.graeshoppe.domain.Contact;
 import com.diviso.graeshoppe.repository.ContactRepository;
 import com.diviso.graeshoppe.service.dto.ContactDTO;
+import com.diviso.graeshoppe.service.mapper.ContactAvroMapper;
 import com.diviso.graeshoppe.service.mapper.ContactMapper;
+import com.diviso.graeshoppe.service.mapper.CustomerAvroMapper;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.integration.support.MessageBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,10 +32,16 @@ public class ContactServiceImpl implements ContactService {
     private final ContactRepository contactRepository;
 
     private final ContactMapper contactMapper;
+    
+	private final ContactAvroMapper contactAvroMapper;
+	
+	@Autowired
+	private MessageBinderConfiguration messageChannel;
 
-    public ContactServiceImpl(ContactRepository contactRepository, ContactMapper contactMapper) {
+    public ContactServiceImpl(ContactRepository contactRepository, ContactMapper contactMapper, ContactAvroMapper contactAvroMapper) {
         this.contactRepository = contactRepository;
         this.contactMapper = contactMapper;
+        this.contactAvroMapper = contactAvroMapper;
     }
 
     /**
@@ -44,8 +55,32 @@ public class ContactServiceImpl implements ContactService {
         log.debug("Request to save Contact : {}", contactDTO);
         Contact contact = contactMapper.toEntity(contactDTO);
         contact = contactRepository.save(contact);
-        return contactMapper.toDto(contact);
+        ContactDTO result= contactMapper.toDto(contact);
+        
+		String status="create";
+        boolean publishstatus=createPublishMesssage(contact,status);
+        
+        log.debug("------------------------------------------published"+publishstatus);
+        return result;
+        
     }
+    
+	@Override
+	public boolean createPublishMesssage(com.diviso.graeshoppe.domain.Contact contact, String status) {
+		
+        log.debug("------------------------------------------publish method"+status);
+
+		com.diviso.graeshoppe.avro.ContactInfo message =contactAvroMapper.toAvro(contact);
+		message .setStatus(status);
+
+		System.out.println("avro mapped#############################################"+message);
+
+		return messageChannel.contactOut().send(MessageBuilder.withPayload(message).build());
+		
+
+	}
+    
+    
 
     /**
      * Get all the contacts.

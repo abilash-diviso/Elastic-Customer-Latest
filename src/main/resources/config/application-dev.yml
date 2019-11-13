@@ -56,7 +56,12 @@ spring:
                 output:
                     destination: topic-jhipster
                 customer:
-                    destination: customer
+                    destination: customer-topic
+                    contentType: application/*+avro
+                    producer:
+                       useNativeEncoding: true
+                contact:
+                    destination: contact-topic
                     contentType: application/*+avro
                     producer:
                        useNativeEncoding: true
@@ -64,7 +69,7 @@ spring:
               endpoint: http://dev.servers.divisosofttech.com:8081
             schema:
               avro:
-                schema-locations: classpath:avro/customer.avsc
+                schema-locations: classpath:avro/customer-schema.avsc
 
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
